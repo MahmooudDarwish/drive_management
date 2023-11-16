@@ -1,6 +1,7 @@
 import 'package:driver_management/home/cubit/cubit.dart';
 import 'package:driver_management/home/cubit/states.dart';
 import 'package:driver_management/home/model/drive_file.dart';
+import 'package:driver_management/services/services_locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -59,7 +60,7 @@ class FileItem extends StatelessWidget {
               children: [
                 IconButton(
                     onPressed: () {
-                      //delete file
+                      sl<HomeCubit>().deleteFile(fileId: driveFile.id!);
                     },
                     icon: const Icon(
                       Icons.delete,
