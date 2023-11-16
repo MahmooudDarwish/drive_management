@@ -30,8 +30,22 @@ class HomeCubit extends Cubit<HomeStates> {
   }
 
   /// Delete file
+  Future deleteFile({required String fileId}) async {
+    emit(DeleteDriveFileLoadingState());
+
+    final result = await sl<GoogleService>().deleteFile(fileId: fileId);
+
+    result.fold(
+        (leftError) => emit(DeleteDriveFileErrorState(errorMessage: leftError)),
+        (rightFileDeleted) {
+      driveFiles.removeWhere((element) => element.id == fileId);
+      emit(DeleteDriveFileSuccessState());
+    });
+  }
 
   /// Upload file
+
+
 
   /// download file
 }

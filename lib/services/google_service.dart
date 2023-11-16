@@ -44,4 +44,19 @@ class GoogleService {
       return Left("Error ${error.toString()}");
     }
   }
+
+  Future<Either<String, DeleteFile>> deleteFile(
+      {required String fileId}) async {
+    try {
+      await driveApi.files.delete(fileId);
+      //its better to return enum rather than string in this situation
+      return const Right(DeleteFile.deleted);
+    } catch (error) {
+      return Left("Error ${error.toString()}");
+    }
+  }
+
+
 }
+
+enum DeleteFile { deleted }
