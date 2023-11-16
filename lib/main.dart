@@ -1,13 +1,11 @@
 import 'package:driver_management/login/login_screen.dart';
 import 'package:driver_management/services/cache_helper.dart';
-import 'package:driver_management/services/dio_helper.dart';
 import 'package:driver_management/services/services_locator.dart';
 import 'package:flutter/material.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   ServicesLocator().init();
-  sl<DioHelper>().init();
   sl<CacheHelper>().init();
 
   runApp(const MyApp());
@@ -20,6 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.grey),
       home: const LoginScreen(),
     );
