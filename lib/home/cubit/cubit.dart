@@ -96,4 +96,16 @@ class HomeCubit extends Cubit<HomeStates> {
       });
     }
   }
+
+  ///log out
+  void logOut() async {
+    emit(LogOutLoadingState());
+    try {
+      await sl<GoogleService>().logout();
+      emit(LogOutSuccessState());
+    } catch (error) {
+      showToast(message: error.toString(), state: ToastState.error);
+      emit(LogOutErrorState(errorMessage: "Error ${error.toString()}"));
+    }
+  }
 }

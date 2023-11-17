@@ -81,3 +81,21 @@ class UploadDriveFileErrorState extends HomeStates {
   @override
   List<Object?> get props => [errorMessage];
 }
+
+/// logout states
+class LogOutLoadingState extends HomeStates {
+  @override
+  List<Object?> get props => throw UnimplementedError();
+}
+
+class LogOutSuccessState extends HomeStates {
+  @override
+  List<Object?> get props => throw UnimplementedError();
+}
+
+class LogOutErrorState extends HomeStates {
+  final String errorMessage;
+  const LogOutErrorState({required this.errorMessage});
+  @override
+  List<Object?> get props => [errorMessage];
+}
