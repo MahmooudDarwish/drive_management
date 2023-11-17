@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:driver_management/core/toasts.dart';
 import 'package:driver_management/home/cubit/states.dart';
 import 'package:driver_management/home/model/drive_file.dart';
@@ -5,6 +7,7 @@ import 'package:driver_management/services/google_service.dart';
 import 'package:driver_management/services/services_locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:file_picker/file_picker.dart';
 
 class HomeCubit extends Cubit<HomeStates> {
   HomeCubit() : super(HomeInitialState());
@@ -12,7 +15,7 @@ class HomeCubit extends Cubit<HomeStates> {
   /// Get files
   List<DriveFile> driveFiles = [];
 
-  Future getFiles() async {
+  void getFiles() async {
     emit(GetDriveFilesLoadingState());
 
     final result = await sl<GoogleService>().getFiles();
@@ -32,7 +35,7 @@ class HomeCubit extends Cubit<HomeStates> {
   }
 
   /// Delete file
-  Future deleteFile({required String fileId}) async {
+  void deleteFile({required String fileId}) async {
     emit(DeleteDriveFileLoadingState());
 
     final result = await sl<GoogleService>().deleteFile(fileId: fileId);
@@ -46,8 +49,7 @@ class HomeCubit extends Cubit<HomeStates> {
   }
 
   /// Download file
-  Future downloadFile(
-      {required String fileId, required String fileName}) async {
+  void downloadFile({required String fileId, required String fileName}) async {
     emit(DownloadDriveFileLoadingState());
 
     try {
@@ -71,4 +73,27 @@ class HomeCubit extends Cubit<HomeStates> {
   }
 
   /// Upload file
+  void uploadFile() async {
+    emit(UploadDriveFileLoadingState());
+    var pickFile = await FilePicker.platform.pickFiles();
+    String? path = pickFile?.files.first.path;
+    File selectedFile = File('$path');
+
+    if (pickFile != null) {
+      var result = await sl<GoogleService>()
+          .uploadFile(selectedFile: selectedFile, filePickerResult: pickFile);
+
+      result.fold((leftError) {
+        showToast(message: leftError, state: ToastState.error);
+        emit(UploadDriveFileErrorState(errorMessage: leftError));
+      }, (rightUploadedFile) {
+        driveFiles.add(DriveFile(
+            thumbnailLink: rightUploadedFile.thumbnailLink,
+            iconLink: rightUploadedFile.iconLink,
+            name: rightUploadedFile.name,
+            id: rightUploadedFile.id));
+        emit(UploadDriveFileSuccessState());
+      });
+    }
+  }
 }
