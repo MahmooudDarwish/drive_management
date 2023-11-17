@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:driver_management/core/api_constance.dart';
 import 'package:driver_management/services/google_http_client.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/drive/v3.dart' as drive;
 import 'package:path_provider/path_provider.dart';
@@ -76,6 +77,24 @@ class GoogleService {
       saveFile.writeAsBytes(dataStore);
     });
     return saveFile.path;
+  }
+
+  Future<Either<String, drive.File>> uploadFile(
+      {required File selectedFile,
+      required FilePickerResult filePickerResult}) async {
+    drive.File fileToUpload = drive.File();
+    final media = drive.Media(
+      selectedFile.openRead(),
+      filePickerResult.files.first.size,
+    );
+    fileToUpload.name = filePickerResult.files.first.name;
+    try {
+      drive.File uploadedFile =
+          await driveApi.files.create(fileToUpload, uploadMedia: media);
+      return Right(uploadedFile);
+    } catch (error) {
+      return Left("Error ${error.toString()}");
+    }
   }
 }
 

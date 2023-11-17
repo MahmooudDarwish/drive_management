@@ -31,6 +31,11 @@ class FilesView extends StatelessWidget {
             condition: sl<HomeCubit>().driveFiles.isNotEmpty,
             builder: (context) {
               return Scaffold(
+                floatingActionButton: FloatingActionButton(
+                  onPressed: () {
+                    sl<HomeCubit>().uploadFile();
+                },
+              child: const Icon(Icons.upload, color: Colors.black,)),
                 body: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: GridView.builder(
