@@ -9,7 +9,7 @@ class HomeInitialState extends HomeStates {
   // TODO: implement props
   List<Object?> get props => throw UnimplementedError();
 }
-
+/// Get States
 class GetDriveFilesLoadingState extends HomeStates {
   @override
   List<Object?> get props => throw UnimplementedError();
@@ -26,7 +26,7 @@ class GetDriveFilesErrorState extends HomeStates {
   @override
   List<Object?> get props => [errorMessage];
 }
-
+/// Delete states
 class DeleteDriveFileLoadingState extends HomeStates {
   @override
   List<Object?> get props => throw UnimplementedError();
@@ -41,6 +41,25 @@ class DeleteDriveFileSuccessState extends HomeStates {
 class DeleteDriveFileErrorState extends HomeStates {
   final String errorMessage;
   const DeleteDriveFileErrorState({required this.errorMessage});
+  @override
+  List<Object?> get props => [errorMessage];
+}
+
+/// Download states
+class DownloadDriveFileLoadingState extends HomeStates {
+  @override
+  List<Object?> get props => throw UnimplementedError();
+}
+
+class DownloadDriveFileSuccessState extends HomeStates {
+
+  @override
+  List<Object?> get props => throw UnimplementedError();
+}
+
+class DownloadDriveFileErrorState extends HomeStates {
+  final String errorMessage;
+  const DownloadDriveFileErrorState({required this.errorMessage});
   @override
   List<Object?> get props => [errorMessage];
 }

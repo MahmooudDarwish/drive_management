@@ -1,8 +1,10 @@
+import 'package:driver_management/core/toasts.dart';
 import 'package:driver_management/home/cubit/states.dart';
 import 'package:driver_management/home/model/drive_file.dart';
 import 'package:driver_management/services/google_service.dart';
 import 'package:driver_management/services/services_locator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 
 class HomeCubit extends Cubit<HomeStates> {
   HomeCubit() : super(HomeInitialState());
@@ -43,9 +45,30 @@ class HomeCubit extends Cubit<HomeStates> {
     });
   }
 
+  /// Download file
+  Future downloadFile(
+      {required String fileId, required String fileName}) async {
+    emit(DownloadDriveFileLoadingState());
+
+    try {
+      String fileDownloadedPath = await sl<GoogleService>()
+          .downloadFile(fileId: fileId, fileName: fileName);
+      //to save it in the gallery
+      if (fileDownloadedPath.contains(".jpg") ||
+          fileDownloadedPath.contains(".png")) {
+        saveImageInGallery(fileDownloadedPath: fileDownloadedPath);
+      }
+      emit(DownloadDriveFileSuccessState());
+    } catch (error) {
+      showToast(message: error.toString(), state: ToastState.error);
+      emit(DownloadDriveFileErrorState(
+          errorMessage: "Error ${error.toString()}"));
+    }
+  }
+
+  void saveImageInGallery({required String fileDownloadedPath}) async {
+    await ImageGallerySaver.saveFile(fileDownloadedPath);
+  }
+
   /// Upload file
-
-
-
-  /// download file
 }

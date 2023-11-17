@@ -72,7 +72,8 @@ class FileItem extends StatelessWidget {
                   padding: const EdgeInsets.only(right: 8.0),
                   child: IconButton(
                       onPressed: () {
-                        //download file
+                        sl<HomeCubit>().downloadFile(
+                            fileId: driveFile.id!, fileName: driveFile.name!);
                       },
                       icon: const Icon(
                         Icons.download,
